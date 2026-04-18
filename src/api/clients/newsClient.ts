@@ -1,12 +1,5 @@
-import axios, { AxiosInstance } from 'axios'
-import { API_CONFIG } from '@/utils/constants'
-import { APIError, isRateLimitError, isTimeoutError } from '@/utils/errors'
 import { News } from '@/types'
-
-interface NewsAPIResponse {
-  status: string
-  articles: NewsArticle[]
-}
+import { APIError } from '@/utils/errors'
 
 interface NewsArticle {
   title: string
@@ -20,46 +13,32 @@ interface NewsArticle {
   description?: string
 }
 
+interface NewsAPIResponse {
+  articles: NewsArticle[]
+}
+
 class NewsClient {
-  private client: AxiosInstance
-  private apiKey: string
-
-  constructor() {
-    const keyFromEnv = process.env.NEXT_PUBLIC_NEWS_API_KEY
-    this.apiKey = keyFromEnv || 'demo'
-
-    // Warn if using demo key
-    if (this.apiKey === 'demo' && typeof window !== 'undefined') {
-      console.warn('⚠️ NewsAPI using demo key. News section will not return data. Get a real key at https://newsapi.org/')
-    }
-
-    this.client = axios.create({
-      baseURL: API_CONFIG.NEWS.BASE_URL,
-      timeout: API_CONFIG.NEWS.TIMEOUT,
-    })
-
-    this.client.interceptors.response.use(
-      (response) => response,
-      (error) => this.handleError(error)
-    )
-  }
-
   async fetchNews(): Promise<News[]> {
     try {
-      const response = await this.client.get<NewsAPIResponse>('/everything', {
-        params: {
-          q: API_CONFIG.NEWS.QUERY,
-          sortBy: API_CONFIG.NEWS.SORT_BY,
-          language: 'en',
-          pageSize: 20,
-          apiKey: this.apiKey,
-        },
+      // Use internal API route — avoids NewsAPI's localhost-only restriction in production
+      const baseUrl =
+        typeof window !== 'undefined'
+          ? '' // browser: relative URL
+          : process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000' // server: absolute URL
+
+      const response = await fetch(`${baseUrl}/api/news`, {
+        next: { revalidate: 300 },
       })
 
-      return this.normalizeNews(response.data.articles)
+      if (!response.ok) {
+        throw new APIError('UNKNOWN', `HTTP ${response.status}`, true)
+      }
+
+      const data: NewsAPIResponse = await response.json()
+      return this.normalizeNews(data.articles || [])
     } catch (error) {
       if (error instanceof APIError) throw error
-      throw new APIError('UNKNOWN', String(error), true)
+      throw new APIError('NETWORK', undefined, true)
     }
   }
 
@@ -74,30 +53,6 @@ class NewsClient {
       publishedAt: new Date(article.publishedAt),
       category: 'crypto' as const,
     }))
-  }
-
-  private handleError(error: any): never {
-    if (error.code === 'ECONNABORTED' || isTimeoutError(error)) {
-      throw new APIError('TIMEOUT', undefined, true)
-    }
-
-    if (error.response?.status === 429 || isRateLimitError(error.response?.status)) {
-      throw new APIError('RATE_LIMIT', undefined, true)
-    }
-
-    if (error.response?.status >= 500) {
-      throw new APIError('UNKNOWN', undefined, true)
-    }
-
-    if (error.response?.status >= 400) {
-      throw new APIError('UNKNOWN', `HTTP ${error.response.status}`, false)
-    }
-
-    if (!error.response) {
-      throw new APIError('NETWORK', undefined, true)
-    }
-
-    throw new APIError('UNKNOWN', String(error), true)
   }
 }
 

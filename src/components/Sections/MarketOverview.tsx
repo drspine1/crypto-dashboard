@@ -2,7 +2,7 @@
 
 import { useDashboardStore } from '@/store/dashboardStore'
 import { CryptoCard } from '@/components/Cards/CryptoCard'
-import { GridSkeleton, EmptyState, ErrorAlert } from '@/components/Common'
+import { GridSkeleton, EmptyState } from '@/components/Common'
 import { useRef, useEffect } from 'react'
 import gsap from 'gsap'
 
@@ -34,7 +34,15 @@ export const MarketOverview = () => {
       <h2 className="text-xl font-bold text-white">Market Overview</h2>
 
       {errors.crypto && (
-        <ErrorAlert error={errors.crypto} onDismiss={() => resetError('crypto')} />
+        <div className="flex items-center justify-between gap-4 rounded-2xl bg-slate-800 border border-slate-700 px-4 py-3">
+          <p className="text-sm text-slate-300">Market data couldn't be loaded right now. Please check back shortly.</p>
+          <button
+            onClick={() => resetError('crypto')}
+            className="text-xs text-slate-400 hover:text-white transition-colors shrink-0"
+          >
+            Dismiss
+          </button>
+        </div>
       )}
 
       {filteredCryptos.length === 0 ? (

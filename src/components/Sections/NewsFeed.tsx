@@ -34,7 +34,15 @@ export const NewsFeed = () => {
       <h2 className="text-xl font-bold text-white">Latest News</h2>
 
       {errors.news && (
-        <ErrorAlert error={errors.news} onDismiss={() => resetError('news')} />
+        <div className="flex items-center justify-between gap-4 rounded-2xl bg-slate-800 border border-slate-700 px-4 py-3">
+          <p className="text-sm text-slate-300">News couldn't be loaded right now. Please check back shortly.</p>
+          <button
+            onClick={() => resetError('news')}
+            className="text-xs text-slate-400 hover:text-white transition-colors shrink-0"
+          >
+            Dismiss
+          </button>
+        </div>
       )}
 
       {filteredNews.length === 0 ? (

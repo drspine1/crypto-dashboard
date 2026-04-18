@@ -35,12 +35,13 @@ export const StatusBar = () => {
 
       {errorCount > 0 && (
         <div className="flex items-center gap-2">
-          <span className="text-xs font-medium text-red-400">{errorCount} API error(s)</span>
+          <span className="inline-block w-2 h-2 bg-yellow-400 rounded-full" />
+          <span className="text-xs font-medium text-yellow-400">Some data unavailable</span>
           <button
             onClick={handleResetErrors}
-            className="text-xs px-2 py-1 rounded bg-red-600 text-white hover:bg-red-700 transition-colors"
+            className="text-xs px-2 py-1 rounded bg-slate-700 text-slate-300 hover:bg-slate-600 transition-colors"
           >
-            Clear
+            Dismiss
           </button>
         </div>
       )}
