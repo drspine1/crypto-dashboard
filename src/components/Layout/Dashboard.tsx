@@ -1,3 +1,5 @@
+'use client'
+
 import { useRef, useEffect } from 'react'
 import gsap from 'gsap'
 import { SearchBar } from '@/components/Common'
@@ -12,13 +14,12 @@ export const Dashboard = () => {
 
   useEffect(() => {
     if (!containerRef.current) return
-
-    gsap.from(containerRef.current, {
-      opacity: 0,
-      y: 20,
-      duration: 0.8,
-      ease: 'power2.out',
-    })
+    const tween = gsap.fromTo(
+      containerRef.current,
+      { opacity: 0, y: 20 },
+      { opacity: 1, y: 0, duration: 0.8, ease: 'power2.out' }
+    )
+    return () => { tween.kill() }
   }, [])
 
   return (

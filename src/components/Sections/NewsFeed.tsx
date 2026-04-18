@@ -1,3 +1,5 @@
+'use client'
+
 import { useDashboardStore } from '@/store/dashboardStore'
 import { NewsCard } from '@/components/Cards/NewsCard'
 import { GridSkeleton, EmptyState, ErrorAlert } from '@/components/Common'
@@ -10,12 +12,12 @@ export const NewsFeed = () => {
 
   useEffect(() => {
     if (!sectionRef.current || loading.initial) return
-    gsap.from(sectionRef.current, {
-      opacity: 0,
-      y: 20,
-      duration: 0.6,
-      delay: 0.1,
-    })
+    const tween = gsap.fromTo(
+      sectionRef.current,
+      { opacity: 0, y: 20 },
+      { opacity: 1, y: 0, duration: 0.6, delay: 0.1, ease: 'power2.out' }
+    )
+    return () => { tween.kill() }
   }, [loading.initial])
 
   if (loading.initial) {

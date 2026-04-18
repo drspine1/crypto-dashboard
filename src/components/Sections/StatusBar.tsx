@@ -1,3 +1,5 @@
+'use client'
+
 import { useDashboardStore } from '@/store/dashboardStore'
 import { formatRelativeTime } from '@/utils/formatters'
 
@@ -18,10 +20,7 @@ export const StatusBar = () => {
           {loading.initial ? (
             <span className="text-white font-medium">Loading...</span>
           ) : pollingActive ? (
-            <>
-              <span className="inline-block w-2 h-2 bg-success-500 rounded-full animate-pulse" />
-              <span className="text-white font-medium">Live</span>
-            </>
+            <span className="inline-block w-2.5 h-2.5 bg-green-500 rounded-full animate-pulse" />
           ) : (
             <span className="text-white font-medium">Ready</span>
           )}

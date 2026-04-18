@@ -34,6 +34,6 @@ export const ERROR_MESSAGES = {
 
 export const PRICE_RANGES = {
   MIN: 0,
-  MAX: 100000,
-  STEP: 1000,
+  MAX: 10_000_000,
+  STEP: 10000,
 }

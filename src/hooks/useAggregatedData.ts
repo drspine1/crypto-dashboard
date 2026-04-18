@@ -1,3 +1,5 @@
+'use client'
+
 import { useEffect } from 'react'
 import { useDashboardStore } from '@/store/dashboardStore'
 import dataAggregator from '@/services/dataAggregator'

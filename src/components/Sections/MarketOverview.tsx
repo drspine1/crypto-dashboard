@@ -1,3 +1,5 @@
+'use client'
+
 import { useDashboardStore } from '@/store/dashboardStore'
 import { CryptoCard } from '@/components/Cards/CryptoCard'
 import { GridSkeleton, EmptyState, ErrorAlert } from '@/components/Common'
@@ -10,11 +12,12 @@ export const MarketOverview = () => {
 
   useEffect(() => {
     if (!sectionRef.current || loading.initial) return
-    gsap.from(sectionRef.current, {
-      opacity: 0,
-      y: 20,
-      duration: 0.6,
-    })
+    const tween = gsap.fromTo(
+      sectionRef.current,
+      { opacity: 0, y: 20 },
+      { opacity: 1, y: 0, duration: 0.6, ease: 'power2.out' }
+    )
+    return () => { tween.kill() }
   }, [loading.initial])
 
   if (loading.initial) {

@@ -1,3 +1,5 @@
+'use client'
+
 import { News } from '@/types'
 import { formatRelativeTime } from '@/utils/formatters'
 import { useRef, useEffect } from 'react'
@@ -11,14 +13,15 @@ interface NewsCardProps {
 export const NewsCard = ({ news, index = 0 }: NewsCardProps) => {
   const cardRef = useRef<HTMLDivElement>(null)
 
+  // Staggered entrance — fromTo guarantees opacity ends at 1 even if interrupted
   useEffect(() => {
     if (!cardRef.current) return
-    gsap.from(cardRef.current, {
-      opacity: 0,
-      x: -20,
-      duration: 0.5,
-      delay: index * 0.08,
-    })
+    const tween = gsap.fromTo(
+      cardRef.current,
+      { opacity: 0, x: -20 },
+      { opacity: 1, x: 0, duration: 0.5, delay: index * 0.08, ease: 'power2.out' }
+    )
+    return () => { tween.kill() }
   }, [index])
 
   return (

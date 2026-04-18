@@ -1,3 +1,5 @@
+'use client'
+
 import { create } from 'zustand'
 import { Crypto, News, ErrorType, FilterOptions, PriceUpdate } from '@/types'
 
@@ -48,7 +50,7 @@ interface DashboardState {
 
 const initialFilters: FilterOptions = {
   searchQuery: '',
-  priceRange: [0, 100000],
+  priceRange: [0, Infinity],
   category: 'all',
   sortBy: 'price',
 }

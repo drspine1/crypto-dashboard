@@ -1,3 +1,5 @@
+'use client'
+
 import { useEffect, useRef } from 'react'
 import { useDashboardStore } from '@/store/dashboardStore'
 import dataAggregator from '@/services/dataAggregator'
@@ -7,14 +9,12 @@ import { Crypto, PriceUpdate } from '@/types'
 
 export const usePolling = () => {
   const {
-    cryptos: currentCryptos,
     setCryptos,
     setNews,
     setLoading,
     setError,
     recordPriceUpdate,
     clearPriceUpdates,
-    filters,
     pollingActive,
     setPollingActive,
     setFilteredCryptos,
@@ -27,29 +27,30 @@ export const usePolling = () => {
     try {
       const data = await dataAggregator.fetchAll()
 
+      // Get current state for price change detection and fallback data
+      const currentState = useDashboardStore.getState()
+
+      // Only update crypto data if we have successful results
       if (data.cryptos.length > 0) {
-        detectPriceChanges(currentCryptos, data.cryptos)
+        detectPriceChanges(currentState.cryptos, data.cryptos)
         setCryptos(data.cryptos)
       }
 
+      // Only update news data if we have successful results
       if (data.news.length > 0) {
         setNews(data.news)
       }
 
-      if (data.errors.crypto) {
-        setError('crypto', data.errors.crypto)
-      } else {
-        setError('crypto', null)
-      }
+      // Always update error states
+      setError('crypto', data.errors.crypto)
+      setError('news', data.errors.news)
 
-      if (data.errors.news) {
-        setError('news', data.errors.news)
-      } else {
-        setError('news', null)
-      }
+      // Apply filters to current data (whether updated or not)
+      const cryptoData = data.cryptos.length > 0 ? data.cryptos : currentState.cryptos
+      const newsData = data.news.length > 0 ? data.news : currentState.news
 
-      const filteredCryptos = filterService.filterCryptos(data.cryptos, filters)
-      const filteredNews = filterService.filterNews(data.news, filters)
+      const filteredCryptos = filterService.filterCryptos(cryptoData, currentState.filters)
+      const filteredNews = filterService.filterNews(newsData, currentState.filters)
       setFilteredCryptos(filteredCryptos)
       setFilteredNews(filteredNews)
     } catch (error) {

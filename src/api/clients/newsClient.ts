@@ -25,9 +25,9 @@ class NewsClient {
   private apiKey: string
 
   constructor() {
-    const keyFromEnv = import.meta.env.VITE_NEWS_API_KEY
+    const keyFromEnv = process.env.NEXT_PUBLIC_NEWS_API_KEY
     this.apiKey = keyFromEnv || 'demo'
-    
+
     // Warn if using demo key
     if (this.apiKey === 'demo' && typeof window !== 'undefined') {
       console.warn('⚠️ NewsAPI using demo key. News section will not return data. Get a real key at https://newsapi.org/')

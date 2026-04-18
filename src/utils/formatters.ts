@@ -1,11 +1,10 @@
 export const formatPrice = (price: number): string => {
-  if (price >= 1_000_000) {
-    return `$${(price / 1_000_000).toFixed(2)}M`
-  }
-  if (price >= 1_000) {
-    return `$${(price / 1_000).toFixed(2)}K`
-  }
-  return `$${price.toFixed(2)}`
+  return new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'USD',
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  }).format(price)
 }
 
 export const formatPercent = (value: number): string => {
@@ -46,10 +45,10 @@ export const formatRelativeTime = (date: Date | string): string => {
 
 export const formatMarketCap = (cap: number): string => {
   if (cap >= 1_000_000_000) {
-    return `$${(cap / 1_000_000_000).toFixed(2)}B`
+    return `${(cap / 1_000_000_000).toFixed(2)}B`
   }
   if (cap >= 1_000_000) {
-    return `$${(cap / 1_000_000).toFixed(2)}M`
+    return `${(cap / 1_000_000).toFixed(2)}M`
   }
-  return `$${cap.toFixed(0)}`
+  return `${cap.toFixed(0)}`
 }

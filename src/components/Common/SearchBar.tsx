@@ -1,3 +1,5 @@
+'use client'
+
 import { useState, useCallback } from 'react'
 import { useDashboardStore } from '@/store/dashboardStore'
 import { UI } from '@/utils/constants'
