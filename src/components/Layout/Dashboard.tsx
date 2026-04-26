@@ -14,21 +14,22 @@ export const Dashboard = () => {
 
   useEffect(() => {
     if (!containerRef.current) return
-    const tween = gsap.fromTo(
-      containerRef.current,
-      { opacity: 0, y: 20 },
-      { opacity: 1, y: 0, duration: 0.8, ease: 'power2.out' }
-    )
-    return () => { tween.kill() }
+
+    gsap.from(containerRef.current, {
+      opacity: 0,
+      y: 20,
+      duration: 0.8,
+      ease: 'power2.out',
+    })
   }, [])
 
   return (
-    <div ref={containerRef} className="min-h-screen bg-gradient-to-r from-slate-950 via-slate-800 to-slate-900 text-white flex flex-col">
+    <div ref={containerRef} className="min-h-screen bg-slate-950 text-white flex flex-col">
       <header className="sticky top-0 z-50 bg-slate-950 border-b border-slate-700 shadow-sm">
         <div className="max-w-7xl mx-auto px-6 py-4 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
           <div>
             <h1 className="text-2xl font-bold text-white">PulseData</h1>
-            <p className="text-xs text-slate-300">Real-time API Aggregator Dashboard</p>
+            <p className="text-xs text-slate-400">Real-time API Aggregator Dashboard</p>
           </div>
           <SearchBar />
         </div>

@@ -12,12 +12,12 @@ export const NewsFeed = () => {
 
   useEffect(() => {
     if (!sectionRef.current || loading.initial) return
-    const tween = gsap.fromTo(
-      sectionRef.current,
-      { opacity: 0, y: 20 },
-      { opacity: 1, y: 0, duration: 0.6, delay: 0.1, ease: 'power2.out' }
-    )
-    return () => { tween.kill() }
+    gsap.from(sectionRef.current, {
+      opacity: 0,
+      y: 20,
+      duration: 0.6,
+      delay: 0.1,
+    })
   }, [loading.initial])
 
   if (loading.initial) {
@@ -34,15 +34,7 @@ export const NewsFeed = () => {
       <h2 className="text-xl font-bold text-white">Latest News</h2>
 
       {errors.news && (
-        <div className="flex items-center justify-between gap-4 rounded-2xl bg-slate-800 border border-slate-700 px-4 py-3">
-          <p className="text-sm text-slate-300">News couldn't be loaded right now. Please check back shortly.</p>
-          <button
-            onClick={() => resetError('news')}
-            className="text-xs text-slate-400 hover:text-white transition-colors shrink-0"
-          >
-            Dismiss
-          </button>
-        </div>
+        <ErrorAlert error={errors.news} onDismiss={() => resetError('news')} />
       )}
 
       {filteredNews.length === 0 ? (

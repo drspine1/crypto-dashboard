@@ -2,7 +2,7 @@ export const API_CONFIG = {
   COINGECKO: {
     BASE_URL: 'https://api.coingecko.com/api/v3',
     TIMEOUT: 10000,
-    IDS: ['bitcoin', 'ethereum', 'cardano', 'solana', 'ripple'],
+    TOP_N: 20,
   },
   NEWS: {
     BASE_URL: 'https://newsapi.org/v2',

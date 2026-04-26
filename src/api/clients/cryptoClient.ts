@@ -30,13 +30,11 @@ class CryptoClient {
 
   async fetchCryptos(): Promise<Crypto[]> {
     try {
-      const ids = API_CONFIG.COINGECKO.IDS.join(',')
       const response = await this.client.get<CoinGeckoResponse[]>('/coins/markets', {
         params: {
           vs_currency: 'usd',
-          ids,
           order: 'market_cap_desc',
-          per_page: 250,
+          per_page: API_CONFIG.COINGECKO.TOP_N,
           page: 1,
           sparkline: false,
           price_change_percentage: '24h',
@@ -50,33 +48,17 @@ class CryptoClient {
     }
   }
 
-  private normalizeCryptos(data: Record<string, any>[]): Crypto[] {
-    return API_CONFIG.COINGECKO.IDS.map((id) => {
-      const item = data.find((d) => d.id === id)
-      if (!item) {
-        return {
-          id,
-          name: id.charAt(0).toUpperCase() + id.slice(1),
-          symbol: id.substring(0, 3).toUpperCase(),
-          price: 0,
-          change24h: 0,
-          marketCap: 0,
-          icon: '',
-          timestamp: new Date(),
-        }
-      }
-
-      return {
-        id: item.id,
-        name: item.name,
-        symbol: item.symbol.toUpperCase(),
-        price: item.current_price || 0,
-        change24h: item.price_change_percentage_24h || 0,
-        marketCap: item.market_cap || 0,
-        icon: item.image || '',
-        timestamp: new Date(),
-      }
-    })
+  private normalizeCryptos(data: CoinGeckoResponse[]): Crypto[] {
+    return data.map((item) => ({
+      id: item.id,
+      name: item.name,
+      symbol: item.symbol.toUpperCase(),
+      price: item.current_price || 0,
+      change24h: item.price_change_percentage_24h || 0,
+      marketCap: item.market_cap || 0,
+      icon: item.image || '',
+      timestamp: new Date(),
+    }))
   }
 
   private handleError(error: any): never {

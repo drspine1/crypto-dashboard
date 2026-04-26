@@ -1,7 +1,7 @@
 'use client'
 
 import { News } from '@/types'
-import { formatRelativeTime } from '@/utils/formatters'
+import { formatDate, formatTime } from '@/utils/formatters'
 import { useRef, useEffect } from 'react'
 import gsap from 'gsap'
 
@@ -49,7 +49,7 @@ export const NewsCard = ({ news, index = 0 }: NewsCardProps) => {
 
       <div className="flex items-center justify-between gap-3 pt-3 border-t border-slate-700">
         <span className="text-xs font-semibold text-sky-300">{news.source}</span>
-        <span className="text-xs text-slate-400">{formatRelativeTime(news.publishedAt)}</span>
+        <span className="text-xs text-slate-400">{formatDate(news.publishedAt)}, {formatTime(news.publishedAt)}</span>
       </div>
     </div>
   )

@@ -20,7 +20,10 @@ export const StatusBar = () => {
           {loading.initial ? (
             <span className="text-white font-medium">Loading...</span>
           ) : pollingActive ? (
-            <span className="inline-block w-2.5 h-2.5 bg-green-500 rounded-full animate-pulse" />
+            <>
+              <span className="inline-block w-2 h-2 bg-success-500 rounded-full animate-pulse" />
+              <span className="text-white font-medium">Live</span>
+            </>
           ) : (
             <span className="text-white font-medium">Ready</span>
           )}
@@ -35,13 +38,12 @@ export const StatusBar = () => {
 
       {errorCount > 0 && (
         <div className="flex items-center gap-2">
-          <span className="inline-block w-2 h-2 bg-yellow-400 rounded-full" />
-          <span className="text-xs font-medium text-yellow-400">Some data unavailable</span>
+          <span className="text-xs font-medium text-red-400">{errorCount} API error(s)</span>
           <button
             onClick={handleResetErrors}
-            className="text-xs px-2 py-1 rounded bg-slate-700 text-slate-300 hover:bg-slate-600 transition-colors"
+            className="text-xs px-2 py-1 rounded bg-red-600 text-white hover:bg-red-700 transition-colors"
           >
-            Dismiss
+            Clear
           </button>
         </div>
       )}
